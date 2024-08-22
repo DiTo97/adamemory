@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - contrib
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: disk space
+        run: df . -h
+
+      - name: unnecessary files
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/share/boost
+
+      - name: disk space
+        run: df -h
+        
+      - uses: actions/checkout@v4
+
+      - name: python - setup
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+
+      - name: poetry - cache dependecies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pypoetry
+            ~/.cache/pypoetry/virtualenvs
+            .venv
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
+            
+      - name: poetry - install
+        run:  python -m pip install poetry
+    
+      - name: poetry - install dependencies
+        run: poetry install --no-root
+
+      - name: poetry - run mypy
+        run: poetry run mypy adamemory/
+
+      - name: poetry - run ruff
+        run: poetry run ruff check adamemory/
+
+      - name: poetry - run pytest
+        run: poetry run pytest tests/

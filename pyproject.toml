@@ -1,0 +1,64 @@
+[tool.poetry]
+name = "adamemory"
+version = "0.1.0"
+description = "adaptive memory layer for agentic AI"
+authors = ["Federico Minutoli <fede97.minutoli@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+langchain-community = "^0.2"
+openai = "^1.0"
+posthog = "^3.0"
+pydantic = "^2.0"
+python-dotenv = "^1.0"
+
+[tool.poetry.dev-dependencies]
+mypy = "^1.0"
+pre-commit = "^3.0"
+pytest = "^8.0"
+
+[build-system]
+requires = ["poetry-core>1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+include_trailing_comma = true
+lines_after_imports = 2
+py_version = 310
+known_first_party = ["adamemory"]
+
+[tool.mypy]
+ignore_missing_imports = true
+exclude = ["notebooks", "examples"]
+
+[tool.ruff]
+exclude = [
+    ".git",
+    ".git-rewrite",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "build",
+    "dist",
+    "site-packages",
+    "venv",
+]
+
+line-length = 88
+indent-width = 4
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.ruff.lint]
+select = ["E", "F"]

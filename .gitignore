@@ -1,0 +1,15 @@
+# caching
+__pycache__
+.mypy_cache
+.pytest_cache
+.ruff_cache
+
+# environment variables
+.env
+
+# IDE
+.idea/
+.vscode/
+
+# virtual environment
+.venv
