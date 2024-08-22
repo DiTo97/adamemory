@@ -69,6 +69,7 @@ poetry run pre-commit install
 
 ## 🚀 roadmap
 
+- **telemetry**: metrics and usage statistics;
 - **hierarchical architecture**: community memories for weakly connected components (WCC);
 - **memory consolidation enhancements**: improving efficiency and scalability of long-term memory mechanisms and storage;
 - **multi-modal memory**: audio, text and vision all at once;
