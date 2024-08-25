@@ -1,3 +1,6 @@
+"""
+common module
+"""
 from .languagemodels.openai import OpenAILLM
 
 UPDATE_GRAPH_PROMPT = """
@@ -70,28 +73,28 @@ def get_update_memory_messages(existing_memories, memory):
 def get_search_results(entities, query):
 
     search_graph_prompt = f"""
-You are an expert at searching through graph entity memories. 
-When provided with existing graph entities and a query, your task is to search through the provided graph entities to find the most relevant information from the graph entities related to the query.
-The output should be from the graph entities only.
+    You are an expert at searching through graph entity memories. 
+    When provided with existing graph entities and a query, your task is to search through the provided graph entities to find the most relevant information from the graph entities related to the query.
+    The output should be from the graph entities only.
 
-Here are the details of the task:
-- Existing Graph Entities (source -> relationship -> target):
-{entities}
+    Here are the details of the task:
+    - Existing Graph Entities (source -> relationship -> target):
+    {entities}
 
-- Query: {query}
+    - Query: {query}
 
-The output should be from the graph entities only.
-The output should be in the following JSON format:
-{{
-    "search_results": [
-        {{
-            "source_node": "source_node",
-            "relationship": "relationship",
-            "target_node": "target_node"
-        }}
-    ]
-}}
-"""
+    The output should be from the graph entities only.
+    The output should be in the following JSON format:
+    {{
+        "search_results": [
+            {{
+                "source_node": "source_node",
+                "relationship": "relationship",
+                "target_node": "target_node"
+            }}
+        ]
+    }}
+    """
 
     messages = [
         {

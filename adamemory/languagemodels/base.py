@@ -1,3 +1,6 @@
+"""
+base module
+"""
 from typing import Optional
 from abc import ABC, abstractmethod
 
