@@ -26,6 +26,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.isort]
 include_trailing_comma = true
 lines_after_imports = 2
+multi_line_output = 3
 py_version = 310
 known_first_party = ["adamemory"]
 
@@ -35,21 +36,21 @@ exclude = ["notebooks", "examples"]
 
 [tool.ruff]
 exclude = [
-    ".git",
-    ".git-rewrite",
-    ".ipynb_checkpoints",
-    ".mypy_cache",
-    ".nox",
-    ".pytest_cache",
-    ".pytype",
-    ".ruff_cache",
-    ".tox",
-    ".venv",
-    ".vscode",
-    "build",
-    "dist",
-    "site-packages",
-    "venv",
+  ".git",
+  ".git-rewrite",
+  ".ipynb_checkpoints",
+  ".mypy_cache",
+  ".nox",
+  ".pytest_cache",
+  ".pytype",
+  ".ruff_cache",
+  ".tox",
+  ".venv",
+  ".vscode",
+  "build",
+  "dist",
+  "site-packages",
+  "venv",
 ]
 
 line-length = 88
