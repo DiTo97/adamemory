@@ -34,7 +34,6 @@ Provide a list of update instructions, each specifying the source, target, and t
 """
 
 EXTRACT_ENTITIES_PROMPT = """
-
 You are an advanced algorithm designed to extract structured information from text to construct knowledge graphs. Your goal is to capture comprehensive information while maintaining accuracy. Follow these key principles:
 
 1. Extract only explicitly stated information from the text.
