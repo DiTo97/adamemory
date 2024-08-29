@@ -1,8 +1,8 @@
-import time
 import threading
-from typing import Dict, Any, List
+import time
+from typing import Any, Dict, List
 
-from .storage import STM, LTM
+from .storage import LTM, STM
 
 
 class Memory:

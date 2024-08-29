@@ -10,7 +10,6 @@ readme = "README.md"
 python = "^3.9"
 langchain-community = "^0.2"
 openai = "^1.0"
-posthog = "^3.0"
 pydantic = "^2.0"
 python-dotenv = "^1.0"
 
@@ -60,6 +59,6 @@ indent-width = 4
 quote-style = "double"
 indent-style = "space"
 line-ending = "auto"
-
 [tool.ruff.lint]
 select = ["E", "F"]
+ignore = ["E501"]

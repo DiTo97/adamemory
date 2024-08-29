@@ -5,6 +5,7 @@ from ..clients.openai import OpenAIClient
 from ..config import abc_EmbeddingConfig
 from .base import abc_Embedding
 
+
 class OpenAIEmbedding(abc_Embedding):
     def __init__(self, config: Optional[abc_EmbeddingConfig] = None):
         super().__init__(config)
