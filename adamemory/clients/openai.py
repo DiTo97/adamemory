@@ -2,11 +2,11 @@ import openai
 
 
 class OpenAIClient:
-  _instance = None
+    _instance = None
 
-  @classmethod
-  def get_instance(cls, **kwargs):
-    if cls._instance is None:
-        cls._instance = openai.OpenAI(**kwargs)
+    @classmethod
+    def get_instance(cls, **kwargs):
+        if cls._instance is None:
+            cls._instance = openai.OpenAI(**kwargs)
 
-    return cls._instance
+        return cls._instance

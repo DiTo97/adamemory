@@ -7,10 +7,9 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.9"
 langchain-community = "^0.2"
 openai = "^1.0"
-posthog = "^3.0"
 pydantic = "^2.0"
 python-dotenv = "^1.0"
 
@@ -26,7 +25,8 @@ build-backend = "poetry.core.masonry.api"
 [tool.isort]
 include_trailing_comma = true
 lines_after_imports = 2
-py_version = 310
+multi_line_output = 3
+py_version = 39
 known_first_party = ["adamemory"]
 
 [tool.mypy]
@@ -35,21 +35,21 @@ exclude = ["notebooks", "examples"]
 
 [tool.ruff]
 exclude = [
-    ".git",
-    ".git-rewrite",
-    ".ipynb_checkpoints",
-    ".mypy_cache",
-    ".nox",
-    ".pytest_cache",
-    ".pytype",
-    ".ruff_cache",
-    ".tox",
-    ".venv",
-    ".vscode",
-    "build",
-    "dist",
-    "site-packages",
-    "venv",
+  ".git",
+  ".git-rewrite",
+  ".ipynb_checkpoints",
+  ".mypy_cache",
+  ".nox",
+  ".pytest_cache",
+  ".pytype",
+  ".ruff_cache",
+  ".tox",
+  ".venv",
+  ".vscode",
+  "build",
+  "dist",
+  "site-packages",
+  "venv",
 ]
 
 line-length = 88
@@ -59,6 +59,6 @@ indent-width = 4
 quote-style = "double"
 indent-style = "space"
 line-ending = "auto"
-
 [tool.ruff.lint]
 select = ["E", "F"]
+ignore = ["E501"]

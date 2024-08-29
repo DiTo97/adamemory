@@ -1,8 +1,8 @@
 """
 base module for the embeddings
 """
-from typing import Optional
 from abc import ABC, abstractmethod
+from typing import Optional
 
 from ..config import abc_EmbeddingConfig
 

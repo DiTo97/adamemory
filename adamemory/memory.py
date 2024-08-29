@@ -1,19 +1,23 @@
-from langchain_community.graphs import Neo4jGraph
-from pydantic import BaseModel, Field
 import json
 
+from langchain_community.graphs import Neo4jGraph
+from pydantic import BaseModel, Field
+
 from .clients.openai import OpenAIClient
-from .languagemodels.openai import OpenAILLM
+from .common import EXTRACT_ENTITIES_PROMPT, get_update_memory_messages
 from .embeddings.openai import OpenAIEmbedding
-from .common import get_update_memory_messages, EXTRACT_ENTITIES_PROMPT
-from .toolkit import UPDATE_MEMORY_TOOL_GRAPH, ADD_MEMORY_TOOL_GRAPH, NOOP_TOOL
+from .languagemodels.openai import OpenAILLM
+from .toolkit import ADD_MEMORY_TOOL_GRAPH, NOOP_TOOL, UPDATE_MEMORY_TOOL_GRAPH
+
 
 client = OpenAIClient.get_instance()
+
 
 class GraphData(BaseModel):
     source: str = Field(..., description="The source node of the relationship")
     target: str = Field(..., description="The target node of the relationship")
     relationship: str = Field(..., description="The type of the relationship")
+
 
 class Entities(BaseModel):
     source_node: str
@@ -22,25 +26,29 @@ class Entities(BaseModel):
     destination_node: str
     destination_type: str
 
+
 class ADDQuery(BaseModel):
     entities: list[Entities]
+
 
 class SEARCHQuery(BaseModel):
     nodes: list[str]
     relations: list[str]
 
+
 def get_embedding(text):
-    response = client.embeddings.create(
-        model="text-embedding-3-small",
-        input=text
-    )
+    response = client.embeddings.create(model="text-embedding-3-small", input=text)
     return response.data[0].embedding
 
 
 class Memory:
     def __init__(self, config):
         self.config = config
-        self.graph = Neo4jGraph(config.graph_store.config.url, config.graph_store.config.username, config.graph_store.config.password)
+        self.graph = Neo4jGraph(
+            config.graph_store.config.url,
+            config.graph_store.config.username,
+            config.graph_store.config.password,
+        )
         self.llm = OpenAILLM()
         self.embedding_model = OpenAIEmbedding()
         self.user_id = None
@@ -49,22 +57,40 @@ class Memory:
 
     def add(self, data):
         search_output = self._search(data)
-        extracted_entities = client.beta.chat.completions.parse(
-            model=self.model_name,
-            messages=[{"role": "system", "content": EXTRACT_ENTITIES_PROMPT.replace("USER_ID", self.user_id)}, {"role": "user", "content": data}],
-            response_format=ADDQuery,
-            temperature=0,
-        ).choices[0].message.parsed.entities
+        extracted_entities = (
+            client.beta.chat.completions.parse(
+                model=self.model_name,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": EXTRACT_ENTITIES_PROMPT.replace(
+                            "USER_ID", self.user_id
+                        ),
+                    },
+                    {"role": "user", "content": data},
+                ],
+                response_format=ADDQuery,
+                temperature=0,
+            )
+            .choices[0]
+            .message.parsed.entities
+        )
 
-        update_memory_prompt = get_update_memory_messages(search_output, extracted_entities)
+        update_memory_prompt = get_update_memory_messages(
+            search_output, extracted_entities
+        )
         tools = [UPDATE_MEMORY_TOOL_GRAPH, ADD_MEMORY_TOOL_GRAPH, NOOP_TOOL]
 
-        memory_updates = client.beta.chat.completions.parse(
-            model=self.model_name,
-            messages=update_memory_prompt,
-            tools=tools,
-            temperature=0,
-        ).choices[0].message.tool_calls
+        memory_updates = (
+            client.beta.chat.completions.parse(
+                model=self.model_name,
+                messages=update_memory_prompt,
+                tools=tools,
+                temperature=0,
+            )
+            .choices[0]
+            .message.tool_calls
+        )
 
         to_be_added = []
         for item in memory_updates:
@@ -73,18 +99,22 @@ class Memory:
             if function_name == "add_graph_memory":
                 to_be_added.append(arguments)
             elif function_name == "update_graph_memory":
-                self._update_relationship(arguments['source'], arguments['destination'], arguments['relationship'])
+                self._update_relationship(
+                    arguments["source"],
+                    arguments["destination"],
+                    arguments["relationship"],
+                )
             elif function_name == "update_name":
-                self._update_name(arguments['name'])
+                self._update_name(arguments["name"])
             elif function_name == "noop":
                 continue
 
         for item in to_be_added:
-            source = item['source'].lower().replace(" ", "_")
-            source_type = item['source_type'].lower().replace(" ", "_")
-            relation = item['relationship'].lower().replace(" ", "_")
-            destination = item['destination'].lower().replace(" ", "_")
-            destination_type = item['destination_type'].lower().replace(" ", "_")
+            source = item["source"].lower().replace(" ", "_")
+            source_type = item["source_type"].lower().replace(" ", "_")
+            relation = item["relationship"].lower().replace(" ", "_")
+            destination = item["destination"].lower().replace(" ", "_")
+            destination_type = item["destination_type"].lower().replace(" ", "_")
 
             source_embedding = get_embedding(source)
             dest_embedding = get_embedding(destination)
@@ -97,7 +127,12 @@ class Memory:
             MERGE (n)-[r:{relation}]->(m)
             RETURN n, r, m
             """
-            params = {"source_name": source, "dest_name": destination, "source_embedding": source_embedding, "dest_embedding": dest_embedding}
+            params = {
+                "source_name": source,
+                "dest_name": destination,
+                "source_embedding": source_embedding,
+                "dest_embedding": dest_embedding,
+            }
 
             with self.graph.driver.session() as session:
                 session.run(cypher, params)
@@ -112,7 +147,11 @@ class Memory:
         SET r.name = $relationship
         RETURN n, r, m
         """
-        params = {"source": source, "destination": destination, "relationship": relationship}
+        params = {
+            "source": source,
+            "destination": destination,
+            "relationship": relationship,
+        }
         with self.graph.driver.session() as session:
             session.run(cypher, params)
 

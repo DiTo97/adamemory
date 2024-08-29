@@ -4,7 +4,9 @@ config module
 import os
 from abc import ABC
 from typing import Any, Dict, Optional
+
 from pydantic import BaseModel, Field, model_validator
+
 
 class Neo4jConfig(BaseModel):
     """
@@ -25,13 +27,17 @@ class Neo4jConfig(BaseModel):
             raise ValueError("Please provide 'url', 'username' and 'password'.")
         return values
 
+
 class GraphStoreConfig(BaseModel):
     """
     Configuration for the graph store.
     """
     provider: str = Field(default="neo4j", description="Provider of the data store")
-    config: Neo4jConfig = Field(default_factory=Neo4jConfig, 
-                                description="Configuration for the specific data store")
+    config: Neo4jConfig = Field(
+        default_factory=Neo4jConfig,
+        description="Configuration for the specific data store",
+    )
+
 
 class MemoryItem(BaseModel):
     """
@@ -40,26 +46,41 @@ class MemoryItem(BaseModel):
     id: str = Field(..., description="The unique identifier for the text data")
     memory: str = Field(..., description="The memory deduced from the text data")
     hash: Optional[str] = Field(None, description="The hash of the memory")
-    metadata: Optional[Dict[str, Any]] = Field(None, 
-                                               description="Additional metadata for the text data")
-    score: Optional[float] = Field(None, description="The score associated with the text data")
-    created_at: Optional[str] = Field(None, description="The timestamp when the memory was created")
-    updated_at: Optional[str] = Field(None, description="The timestamp when the memory was updated")
+    metadata: Optional[Dict[str, Any]] = Field(
+        None, description="Additional metadata for the text data"
+    )
+    score: Optional[float] = Field(
+        None, description="The score associated with the text data"
+    )
+    created_at: Optional[str] = Field(
+        None, description="The timestamp when the memory was created"
+    )
+    updated_at: Optional[str] = Field(
+        None, description="The timestamp when the memory was updated"
+    )
+
 
 class MemoryConfig(BaseModel):
     """
     Configuration for the memory system.
     """
-    vector_store: Any = Field(default_factory=dict, 
-                              description="Configuration for the vector store")
-    llm: Any = Field(default_factory=dict, description="Configuration for the language model")
-    embedder: Any = Field(default_factory=dict, description="Configuration for the embedding model")
-    history_db_path: str = Field(default=os.path.join("mem0", "history.db"),
-                                 description="Path to the history database")
-    graph_store: GraphStoreConfig = Field(default_factory=GraphStoreConfig,
-                                          description="Configuration for the graph")
+    vector_store: Any = Field(
+        default_factory=dict, description="Configuration for the vector store"
+    )
+    llm: Any = Field(
+        default_factory=dict, description="Configuration for the language model"
+    )
+    embedder: Any = Field(
+        default_factory=dict, description="Configuration for the embedding model"
+    )
+    history_db_path: str = Field(
+        default=os.path.join("mem0", "history.db"),
+        description="Path to the history database",
+    )
+    graph_store: GraphStoreConfig = Field(
+        default_factory=GraphStoreConfig, description="Configuration for the graph"
+    )
     version: str = Field(default="v1.0", description="The version of the API")
-
 
 
 class abc_LLMConfig(ABC):
@@ -131,6 +152,7 @@ class abc_LLMConfig(ABC):
 
         # Ollama specific
         self.ollama_base_url = ollama_base_url
+
 
 class abc_EmbeddingConfig(ABC):
     """

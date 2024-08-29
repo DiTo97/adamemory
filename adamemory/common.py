@@ -3,6 +3,7 @@ common module
 """
 from .languagemodels.openai import OpenAILLM
 
+
 UPDATE_GRAPH_PROMPT = """
 You are an AI expert specializing in graph memory management and optimization. Your task is to analyze existing graph memories alongside new information, and update the relationships in the memory list to ensure the most accurate, current, and coherent representation of knowledge.
 
@@ -57,43 +58,45 @@ Strive for a coherent, easily understandable knowledge graph by maintaining cons
 Adhere strictly to these guidelines to ensure high-quality knowledge graph extraction."""
 
 
-
 def get_update_memory_prompt(existing_memories, memory, template):
     return template.format(existing_memories=existing_memories, memory=memory)
+
 
 def get_update_memory_messages(existing_memories, memory):
     return [
         {
             "role": "user",
-            "content": get_update_memory_prompt(existing_memories, memory, UPDATE_GRAPH_PROMPT),
+            "content": get_update_memory_prompt(
+                existing_memories, memory, UPDATE_GRAPH_PROMPT
+            ),
         },
     ]
 
+
 def get_search_results(entities, query):
+    search_graph_prompt = f"""\
+You are an expert at searching through graph entity memories.
+When provided with existing graph entities and a query, your task is to search through the provided graph entities to find the most relevant information from the graph entities related to the query.
+The output should be from the graph entities only.
 
-    search_graph_prompt = f"""
-    You are an expert at searching through graph entity memories. 
-    When provided with existing graph entities and a query, your task is to search through the provided graph entities to find the most relevant information from the graph entities related to the query.
-    The output should be from the graph entities only.
+Here are the details of the task:
+- Existing Graph Entities (source -> relationship -> target):
+{entities}
 
-    Here are the details of the task:
-    - Existing Graph Entities (source -> relationship -> target):
-    {entities}
+- Query: {query}
 
-    - Query: {query}
-
-    The output should be from the graph entities only.
-    The output should be in the following JSON format:
-    {{
-        "search_results": [
-            {{
-                "source_node": "source_node",
-                "relationship": "relationship",
-                "target_node": "target_node"
-            }}
-        ]
-    }}
-    """
+The output should be from the graph entities only.
+The output should be in the following JSON format:
+{{
+    "search_results": [
+        {{
+            "source_node": "source_node",
+            "relationship": "relationship",
+            "target_node": "target_node"
+        }}
+    ]
+}}
+"""
 
     messages = [
         {
@@ -104,6 +107,34 @@ def get_search_results(entities, query):
 
     llm = OpenAILLM()
 
-    results = llm.generate_response(messages=messages, response_format={"type": "json_object"})
+    results = llm.generate_response(
+        messages=messages, response_format={"type": "json_object"}
+    )
 
     return results
+
+
+def only_once(func):
+    """Decorator to ensure a function is executed only once.
+
+    On the first invokation, the function is executed normally.
+    On subsequent calls, the cached result is returned.
+
+    Args:
+        func (Callable): The function to be decorated.
+
+    Returns:
+        Callable: The wrapped function with the only-once behavior.
+    """
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        # Check if the function has already been executed
+        if not wrapper.runnable:
+            wrapper.output = func(*args, **kwargs)
+            wrapper.runnable = True  # Mark function as having been executed
+        return wrapper.output
+
+    wrapper.runnable = False  # Initially mark the function as not executed
+    wrapper.output = None  # Placeholder for the function output
+    return wrapper

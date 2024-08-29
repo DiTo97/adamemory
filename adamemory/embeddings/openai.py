@@ -7,6 +7,7 @@ from ..clients.openai import OpenAIClient
 from ..config import abc_EmbeddingConfig
 from .base import abc_Embedding
 
+
 class OpenAIEmbedding(abc_Embedding):
     """
     OpenAI embedding implementation.
