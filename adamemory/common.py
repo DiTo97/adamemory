@@ -1,3 +1,6 @@
+"""
+common module
+"""
 from .languagemodels.openai import OpenAILLM
 
 
@@ -32,7 +35,6 @@ Provide a list of update instructions, each specifying the source, target, and t
 """
 
 EXTRACT_ENTITIES_PROMPT = """
-
 You are an advanced algorithm designed to extract structured information from text to construct knowledge graphs. Your goal is to capture comprehensive information while maintaining accuracy. Follow these key principles:
 
 1. Extract only explicitly stated information from the text.
@@ -72,7 +74,7 @@ def get_update_memory_messages(existing_memories, memory):
 
 
 def get_search_results(entities, query):
-    search_graph_prompt = f"""
+    search_graph_prompt = f"""\
 You are an expert at searching through graph entity memories.
 When provided with existing graph entities and a query, your task is to search through the provided graph entities to find the most relevant information from the graph entities related to the query.
 The output should be from the graph entities only.

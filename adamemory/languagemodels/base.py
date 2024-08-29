@@ -1,3 +1,6 @@
+"""
+base module for language models
+"""
 from abc import ABC, abstractmethod
 from typing import Optional
 

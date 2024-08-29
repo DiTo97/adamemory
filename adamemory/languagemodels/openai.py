@@ -1,7 +1,9 @@
+"""
+wrapper module for OpenAI language models
+"""
 import json
 import os
 from typing import Dict, List, Optional
-
 from openai import OpenAI
 
 from ..config import abc_LLMConfig
@@ -9,7 +11,16 @@ from .base import abc_LLM
 
 
 class OpenAILLM(abc_LLM):
+    """
+    OpenAI LLM implementation.
+    """
     def __init__(self, config: Optional[abc_LLMConfig] = None):
+        """
+        Initializes the OpenAILLM instance.
+
+        :param config: Configuration for the LLM, defaults to None
+        :type config: Optional[abc_LLMConfig], optional
+        """
         super().__init__(config)
 
         if not self.config.model:
@@ -95,7 +106,7 @@ class OpenAILLM(abc_LLM):
                 }
                 openrouter_params["extra_headers"] = extra_headers
 
-            params.update(**openrouter_params)
+            params.update(openrouter_params)
 
         if response_format:
             params["response_format"] = response_format

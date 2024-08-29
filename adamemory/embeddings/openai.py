@@ -1,13 +1,28 @@
+"""
+openai module for embeddings
+"""
 import os
 from typing import Optional
-
 from ..clients.openai import OpenAIClient
 from ..config import abc_EmbeddingConfig
 from .base import abc_Embedding
 
 
 class OpenAIEmbedding(abc_Embedding):
+    """
+    OpenAI embedding implementation.
+
+    :param config: Embedding configuration option class, defaults to None
+    :type config: Optional[abc_EmbeddingConfig], optional
+    """
+
     def __init__(self, config: Optional[abc_EmbeddingConfig] = None):
+        """
+        Initializes the OpenAIEmbedding instance.
+
+        :param config: Embedding configuration option class, defaults to None
+        :type config: Optional[abc_EmbeddingConfig], optional
+        """
         super().__init__(config)
 
         self.config.model = self.config.model or "text-embedding-3-small"

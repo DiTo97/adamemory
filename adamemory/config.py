@@ -1,3 +1,6 @@
+"""
+config module
+"""
 import os
 from abc import ABC
 from typing import Any, Dict, Optional
@@ -6,6 +9,9 @@ from pydantic import BaseModel, Field, model_validator
 
 
 class Neo4jConfig(BaseModel):
+    """
+    Configuration for Neo4j graph database.
+    """
     url: Optional[str] = Field(None, description="Host address for the graph database")
     username: Optional[str] = Field(None, description="Username for the graph database")
     password: Optional[str] = Field(None, description="Password for the graph database")
@@ -23,6 +29,9 @@ class Neo4jConfig(BaseModel):
 
 
 class GraphStoreConfig(BaseModel):
+    """
+    Configuration for the graph store.
+    """
     provider: str = Field(default="neo4j", description="Provider of the data store")
     config: Neo4jConfig = Field(
         default_factory=Neo4jConfig,
@@ -31,6 +40,9 @@ class GraphStoreConfig(BaseModel):
 
 
 class MemoryItem(BaseModel):
+    """
+    Represents a memory item with associated metadata.
+    """
     id: str = Field(..., description="The unique identifier for the text data")
     memory: str = Field(..., description="The memory deduced from the text data")
     hash: Optional[str] = Field(None, description="The hash of the memory")
@@ -49,6 +61,9 @@ class MemoryItem(BaseModel):
 
 
 class MemoryConfig(BaseModel):
+    """
+    Configuration for the memory system.
+    """
     vector_store: Any = Field(
         default_factory=dict, description="Configuration for the vector store"
     )
