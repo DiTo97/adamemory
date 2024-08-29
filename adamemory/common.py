@@ -110,3 +110,29 @@ The output should be in the following JSON format:
     )
 
     return results
+
+
+def only_once(func):
+    """Decorator to ensure a function is executed only once.
+
+    On the first invokation, the function is executed normally.
+    On subsequent calls, the cached result is returned.
+
+    Args:
+        func (Callable): The function to be decorated.
+
+    Returns:
+        Callable: The wrapped function with the only-once behavior.
+    """
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        # Check if the function has already been executed
+        if not wrapper.runnable:
+            wrapper.output = func(*args, **kwargs)
+            wrapper.runnable = True  # Mark function as having been executed
+        return wrapper.output
+
+    wrapper.runnable = False  # Initially mark the function as not executed
+    wrapper.output = None  # Placeholder for the function output
+    return wrapper
