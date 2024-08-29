@@ -25,6 +25,7 @@ from functools import wraps
 from typing import Callable, Dict
 from urllib import request
 
+from .common import only_once
 from .logging import get_logger
 
 
@@ -40,32 +41,6 @@ API_KEY = "<TODO>"
 TIMEOUT = 2  # Timeout duration for HTTP requests in seconds
 DEFAULT_CONFIG_LOCATION = os.path.expanduser("~/.adamemory.conf")
 MAX_COUNT_SESSION = 1000  # Maximum number of telemetry events per session
-
-
-# Decorator to ensure function runs only once
-def only_once(func):
-    """
-    Decorator to ensure a function is only executed once.
-    On subsequent calls, the cached result is returned.
-
-    Args:
-        func (Callable): The function to be decorated.
-
-    Returns:
-        Callable: The wrapped function with the only-once behavior.
-    """
-
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        # Check if the function has already been executed
-        if not wrapper.runnable:
-            wrapper.output = func(*args, **kwargs)
-            wrapper.runnable = True  # Mark function as having been executed
-        return wrapper.output
-
-    wrapper.runnable = False  # Initially mark the function as not executed
-    wrapper.output = None  # Placeholder for the function output
-    return wrapper
 
 
 # Load Configuration
