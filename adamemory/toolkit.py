@@ -9,21 +9,21 @@ UPDATE_MEMORY_TOOL_GRAPH = {
             "properties": {
                 "source": {
                     "type": "string",
-                    "description": "The identifier of the source node in the relationship to be updated. This should match an existing node in the graph."
+                    "description": "The identifier of the source node in the relationship to be updated. This should match an existing node in the graph.",
                 },
                 "destination": {
                     "type": "string",
-                    "description": "The identifier of the destination node in the relationship to be updated. This should match an existing node in the graph."
+                    "description": "The identifier of the destination node in the relationship to be updated. This should match an existing node in the graph.",
                 },
                 "relationship": {
                     "type": "string",
-                    "description": "The new or updated relationship between the source and destination nodes. This should be a concise, clear description of how the two nodes are connected."
-                }
+                    "description": "The new or updated relationship between the source and destination nodes. This should be a concise, clear description of how the two nodes are connected.",
+                },
             },
             "required": ["source", "destination", "relationship"],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }
 
 ADD_MEMORY_TOOL_GRAPH = {
@@ -37,29 +37,35 @@ ADD_MEMORY_TOOL_GRAPH = {
             "properties": {
                 "source": {
                     "type": "string",
-                    "description": "The identifier of the source node in the new relationship. This can be an existing node or a new node to be created."
+                    "description": "The identifier of the source node in the new relationship. This can be an existing node or a new node to be created.",
                 },
                 "destination": {
                     "type": "string",
-                    "description": "The identifier of the destination node in the new relationship. This can be an existing node or a new node to be created."
+                    "description": "The identifier of the destination node in the new relationship. This can be an existing node or a new node to be created.",
                 },
                 "relationship": {
                     "type": "string",
-                    "description": "The type of relationship between the source and destination nodes. This should be a concise, clear description of how the two nodes are connected."
+                    "description": "The type of relationship between the source and destination nodes. This should be a concise, clear description of how the two nodes are connected.",
                 },
                 "source_type": {
                     "type": "string",
-                    "description": "The type or category of the source node. This helps in classifying and organizing nodes in the graph."
+                    "description": "The type or category of the source node. This helps in classifying and organizing nodes in the graph.",
                 },
                 "destination_type": {
                     "type": "string",
-                    "description": "The type or category of the destination node. This helps in classifying and organizing nodes in the graph."
-                }
+                    "description": "The type or category of the destination node. This helps in classifying and organizing nodes in the graph.",
+                },
             },
-            "required": ["source", "destination", "relationship", "source_type", "destination_type"],
-            "additionalProperties": False
-        }
-    }
+            "required": [
+                "source",
+                "destination",
+                "relationship",
+                "source_type",
+                "destination_type",
+            ],
+            "additionalProperties": False,
+        },
+    },
 }
 
 
@@ -73,7 +79,7 @@ NOOP_TOOL = {
             "type": "object",
             "properties": {},
             "required": [],
-            "additionalProperties": False
-        }
-    }
+            "additionalProperties": False,
+        },
+    },
 }

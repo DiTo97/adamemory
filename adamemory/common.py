@@ -1,5 +1,6 @@
 from .languagemodels.openai import OpenAILLM
 
+
 UPDATE_GRAPH_PROMPT = """
 You are an AI expert specializing in graph memory management and optimization. Your task is to analyze existing graph memories alongside new information, and update the relationships in the memory list to ensure the most accurate, current, and coherent representation of knowledge.
 
@@ -55,22 +56,24 @@ Strive for a coherent, easily understandable knowledge graph by maintaining cons
 Adhere strictly to these guidelines to ensure high-quality knowledge graph extraction."""
 
 
-
 def get_update_memory_prompt(existing_memories, memory, template):
     return template.format(existing_memories=existing_memories, memory=memory)
+
 
 def get_update_memory_messages(existing_memories, memory):
     return [
         {
             "role": "user",
-            "content": get_update_memory_prompt(existing_memories, memory, UPDATE_GRAPH_PROMPT),
+            "content": get_update_memory_prompt(
+                existing_memories, memory, UPDATE_GRAPH_PROMPT
+            ),
         },
     ]
 
-def get_search_results(entities, query):
 
+def get_search_results(entities, query):
     search_graph_prompt = f"""
-You are an expert at searching through graph entity memories. 
+You are an expert at searching through graph entity memories.
 When provided with existing graph entities and a query, your task is to search through the provided graph entities to find the most relevant information from the graph entities related to the query.
 The output should be from the graph entities only.
 
@@ -102,6 +105,8 @@ The output should be in the following JSON format:
 
     llm = OpenAILLM()
 
-    results = llm.generate_response(messages=messages, response_format={"type": "json_object"})
+    results = llm.generate_response(
+        messages=messages, response_format={"type": "json_object"}
+    )
 
     return results
